@@ -1,32 +1,40 @@
 package com.example.mint
 
+import android.app.Activity
 import android.os.Bundle
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.mint.controler.viewControler
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import java.security.Provider
 
 class AuthActivity : AppCompatActivity() {
-    lateinit var authButton : Button
-    lateinit var authText: TextView
-    lateinit var emailTxt: TextInputEditText
-    lateinit var pwdTxt: TextInputEditText
-    var isLogin: Boolean = true
+
+    var controlador: viewControler? = null
+    lateinit var activity: Activity
+
+    private lateinit var authButton : Button
+    private lateinit var authText: TextView
+    private lateinit var emailTxt: TextInputEditText
+    private lateinit var pwdTxt: TextInputEditText
+    private var isLogin: Boolean = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        controlador = viewControler(this)
+        activity = this
         enableEdgeToEdge()
+        FirebaseApp.initializeApp(this)
         setContentView(R.layout.activity_auth)
         authButton = findViewById(R.id.logInButton)
         authText = findViewById(R.id.registerText)
@@ -43,7 +51,7 @@ class AuthActivity : AppCompatActivity() {
                 cambiarRegistrar()
                 isLogin = false
             } else {
-                cambiarInicioSesión()
+                cambiarInicioSesion()
                 isLogin = true
             }
         }
@@ -52,56 +60,19 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun setup() {
-        title = "Auth"
-
-        authButton.setOnClickListener {
-            if (!isLogin) {
-                if (emailTxt.text!!.isNotEmpty() && pwdTxt.text!!.isNotEmpty()) {
-                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                        emailTxt.text.toString(),
-                        pwdTxt.text.toString()
-                    ).addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Toast.makeText(this, "Ha sido registrado correctamente, " +
-                                    "inicie sesión", Toast.LENGTH_SHORT).show()
-                            cambiarInicioSesión()
-                        } else {
-                            showAlert()
-                        }
-
-                    }
+        authButton.setOnClickListener { view ->
+            modoSesion(view) { resultado ->
+                if (resultado) {
+                    controlador?.cambiarVentana(this, MainMenuActivity::class.java)
+                    finish()
                 }
             }
-            else{
-                if (emailTxt.text!!.isNotEmpty() && pwdTxt.text!!.isNotEmpty()){
-                    FirebaseAuth.getInstance()
-                        .signInWithEmailAndPassword(emailTxt.text.toString(),
-                            pwdTxt.text.toString()).addOnCompleteListener {
-                                if (it.isSuccessful){
-                                    Toast.makeText(this, "Dentro"
-                                        , Toast.LENGTH_SHORT).show()
-                                }
-                        }
-                }
-            }
-
         }
     }
 
-    private fun showAlert() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
-        builder.setMessage("Se ha producido un error de autenticación")
-        builder.setPositiveButton("Aceptar", null)
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
 
-    private fun showMainMenu(){
 
-    }
-
-    fun cambiarInicioSesión() {
+    private fun cambiarInicioSesion() {
         findViewById<TextInputLayout>(R.id.passwordConfirmEditTextLayout).visibility = TextInputLayout.GONE
         findViewById<TextInputLayout>(R.id.passwordConfirmEditTextLayout).startAnimation(
             AnimationUtils.loadAnimation(this, R.anim.fade_out).apply {
@@ -116,7 +87,7 @@ class AuthActivity : AppCompatActivity() {
     /**
      * Cambia la interfaz para el modo de registro.
      */
-    fun cambiarRegistrar() {
+    private fun cambiarRegistrar() {
         findViewById<TextInputLayout>(R.id.passwordConfirmEditTextLayout).visibility = TextInputLayout.VISIBLE
         findViewById<TextInputLayout>(R.id.passwordConfirmEditTextLayout).startAnimation(
             AnimationUtils.loadAnimation(this, R.anim.fade_in).apply {
@@ -126,6 +97,82 @@ class AuthActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.passwordConfirmEditText).text = ""
         findViewById<Button>(R.id.logInButton).text = "Registrarse"
         findViewById<TextView>(R.id.registerText).text = "Ya tienes cuenta? Inicia Sesión"
+    }
+
+    private fun iniciarSesion(view: View, callback: (Boolean) -> Unit) {
+
+        val email = emailTxt.text.toString()
+        val password = pwdTxt.text.toString()
+
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(
+                            this, "Ha iniciado sesión con éxito",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        callback(true)
+                    } else {
+                        Toast.makeText(
+                            this, "Error de inicio de sesión: ${task.exception?.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        callback(false)
+                    }
+                }
+        } else {
+            Toast.makeText(
+                this, "Por favor, complete los campos solicitados",
+                Toast.LENGTH_SHORT
+            ).show()
+            callback(false)
+        }
+    }
+
+    private fun registroUsuario(view: View, callback: (Boolean) -> Unit) {
+
+        val email = emailTxt.text.toString()
+        val password = pwdTxt.text.toString()
+        val confirmPassword = findViewById<TextInputEditText>(R.id.passwordConfirmEditText)
+            .text.toString()
+
+        if (email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty()) {
+            if (password == confirmPassword) {
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Se ha registrado correctamente, inicie sesión",
+                                Toast.LENGTH_SHORT).show()
+                            callback(true)
+                        } else {
+                            Toast.makeText(this, "Error en el registro: ${task.exception?.message}",
+                                Toast.LENGTH_SHORT).show()
+                            callback(false)
+                        }
+                    }
+            } else {
+                Toast.makeText(this, "Las contraseñas no coinciden",
+                    Toast.LENGTH_SHORT).show()
+                callback(false)
+            }
+        } else {
+            Toast.makeText(this, "Complete todos los campos",
+                Toast.LENGTH_SHORT).show()
+            callback(false)
+        }
+    }
+
+    private fun modoSesion(view: View, callback: (Boolean) -> Unit) {
+        if (isLogin) {
+            iniciarSesion(view) { resultado ->
+                callback(resultado)
+            }
+        } else {
+            registroUsuario(view) { resultado ->
+                callback(resultado)
+            }
+        }
     }
 
 }
