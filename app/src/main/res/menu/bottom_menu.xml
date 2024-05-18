@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/home"
+    android:icon="@mipmap/paratrasicono"
+    android:title="Inicio"
+    app:cnb_backgroundColor="#00FF1F"
+    app:cnb_iconColor="@color/white"/>
+    <item android:id="@+id/favoritos"
+        android:icon="@mipmap/favoritosicono"
+        android:title="Favoritos"
+        app:cnb_backgroundColor="#00FF1F"
+        app:cnb_iconColor="@color/white"/>
+    <item android:id="@+id/carrito"
+        android:icon="@mipmap/carritoicono"
+        android:title="Carrito"
+        app:cnb_backgroundColor="#00FF1F"
+        app:cnb_iconColor="@color/white"/>
+    <item android:id="@+id/whishlist"
+        android:icon="@mipmap/listaicono"
+        android:title="Lista"
+        app:cnb_backgroundColor="#00FF1F"
+        app:cnb_iconColor="@color/white"/>
+</menu>

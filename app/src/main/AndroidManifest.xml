@@ -15,16 +15,16 @@
         android:theme="@style/Theme.Mint"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.NegociosActivity"
+            android:name=".Activity.CartActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.DashBoardActivity"
+            android:name=".Activity.ListFoodActivity"
             android:exported="false" />
         <activity
-            android:name=".ActivityList"
+            android:name=".Activity.DetailProductActivity"
             android:exported="false" />
         <activity
-            android:name=".NegocioVistaActivity"
+            android:name=".Activity.DashboardActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.MainMenuActivity"
