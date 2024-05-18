@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "406834049434",
+    "project_id": "cumn-grupon",
+    "storage_bucket": "cumn-grupon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406834049434:android:2c0ce2dbf1b725d6f64a23",
+        "android_client_info": {
+          "package_name": "com.example.mint"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6VHItd-sB3q2gYYn1O3z5onKEZTeqJfc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
