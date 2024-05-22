@@ -12,8 +12,11 @@ import com.example.mint.databinding.ActivityDetailProductBinding;
 public class DetailProductActivity extends BaseActivity {
     ActivityDetailProductBinding binding;
     private Foods object;
-    private int num = 1;
+    private int num = 0;
     private ManagmentCart managmentCart;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,23 +24,24 @@ public class DetailProductActivity extends BaseActivity {
         binding = ActivityDetailProductBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         getIntentExtra();
         getVariable();
 
     }
 
     private void getVariable() {
-        managmentCart = new ManagmentCart();
+        managmentCart = new ManagmentCart(this);
 
         binding.backeBtn.setOnClickListener(view -> finish());
 
         Glide.with(this)
-                .load(object.getImageData())
+                .load(object.getImagePath())
                 .transform(new CenterCrop(), new RoundedCorners(60))
                 .into(binding.detailProdPic);
 
         binding.precioTxt.setText(object.getPrice() + "€");
-        binding.tituloTxt.setText(object.getNombre());
+        binding.tituloTxt.setText(object.getTitle());
         binding.descripcionTxt.setText(object.getDescription());
         binding.ratingTxt.setText(object.getStar() + "Valoración");
         binding.ratingBar.setRating((float) object.getStar());

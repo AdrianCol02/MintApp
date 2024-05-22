@@ -18,7 +18,7 @@ import com.example.mint.R;
 
 import java.util.ArrayList;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewholder> {
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     ArrayList<Category> items;
     Context context;
 
@@ -28,20 +28,20 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewho
 
     @NonNull
     @Override
-    public CategoryAdapter.viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CategoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_category,
-                parent,false);
-        return new viewholder(inflate);
+                parent, false);
+        return new ViewHolder(inflate);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryAdapter.viewholder holder, int position) {
+    public void onBindViewHolder(@NonNull CategoryAdapter.ViewHolder holder, int position) {
         holder.titleTxt.setText(items.get(position).getName());
 
 
         Glide.with(context)
-                .load(items.get(position).getImageData())
+                .load(items.get(position).getImagePath())
                 .into(holder.pic);
 
         holder.itemView.setOnClickListener(view -> {
@@ -57,10 +57,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewho
         return items.size();
     }
 
-    public class viewholder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView titleTxt;
         ImageView pic;
-        public viewholder(@NonNull View itemView) {
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTxt = itemView.findViewById(R.id.catNameTxt);
             pic = itemView.findViewById(R.id.imgCat);

@@ -34,17 +34,17 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.viewho
         context = parent.getContext();
 
         return new viewholder(LayoutInflater.from(context).inflate(
-                R.layout.activity_list_food, parent, false));
+                R.layout.viewholder_list_food, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull FoodListAdapter.viewholder holder, int position) {
-        holder.titleTxt.setText(items.get(position).getNombre());
+        holder.titleTxt.setText(items.get(position).getTitle());
         holder.rateTxt.setText("" + items.get(position).getStar());
         holder.priceTxt.setText(items.get(position).getPrice() + "€");
 
         Glide.with(context)
-                .load(items.get(position).getImageData())
+                .load(items.get(position).getImagePath())
                 .transform(new CenterCrop(), new RoundedCorners(50))
                 .into(holder.pic);
 

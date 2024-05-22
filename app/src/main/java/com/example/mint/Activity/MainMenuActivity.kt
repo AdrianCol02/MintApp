@@ -8,14 +8,17 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mint.R
+import com.google.firebase.database.FirebaseDatabase
 
 class MainMenuActivity : AppCompatActivity() {
     lateinit var compraBtn: ConstraintLayout
+    var database: FirebaseDatabase? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main_menu)
         compraBtn = findViewById(R.id.compraBtn)
+        database = FirebaseDatabase.getInstance()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)

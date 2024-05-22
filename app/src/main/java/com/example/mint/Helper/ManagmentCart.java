@@ -13,7 +13,7 @@ public class ManagmentCart {
     private Context context;
     private TinyDB tinyDB;
 
-    public ManagmentCart() {
+    public ManagmentCart(Context context) {
         this.context = context;
         this.tinyDB=new TinyDB(context);
     }
@@ -23,7 +23,7 @@ public class ManagmentCart {
         boolean existAlready = false;
         int n = 0;
         for (int i = 0; i < listpop.size(); i++) {
-            if (listpop.get(i).getNombre().equals(item.getNombre())) {
+            if (listpop.get(i).getTitle().equals(item.getTitle())) {
                 existAlready = true;
                 n = i;
                 break;

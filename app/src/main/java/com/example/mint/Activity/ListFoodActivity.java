@@ -1,40 +1,70 @@
 package com.example.mint.Activity;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mint.Adapter.FoodListAdapter;
 import com.example.mint.Domain.Foods;
 import com.example.mint.databinding.ActivityListFoodBinding;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ListFoodActivity extends BaseActivity {
     ActivityListFoodBinding binding;
-    private RecyclerView.Adapter adapter;
     private int categoryId;
     private String categoryName;
+    FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityListFoodBinding.inflate(getLayoutInflater());
+        database = FirebaseDatabase.getInstance();
         setContentView(binding.getRoot());
+
 
         getIntentExtra();
         initList();
     }
 
     private void initList() {
+        DatabaseReference myRef = database.getReference("Foods");
         binding.progressBar.setVisibility(View.VISIBLE);
-        new LoadFoodListTask().execute(categoryId);
+        ArrayList<Foods> list = new ArrayList<>();
+        Query query = myRef.orderByChild("CategoryId").equalTo(categoryId);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for (DataSnapshot issue:
+                            snapshot.getChildren()){
+                        list.add(issue.getValue(Foods.class));
+                    }
+                    if (list.size() > 0){
+                        binding.foodListView.setLayoutManager(new LinearLayoutManager(
+                                ListFoodActivity.this, LinearLayoutManager.VERTICAL, false
+                        ));
+                        binding.foodListView.setAdapter(new FoodListAdapter(list));
+                    }
+                    binding.progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void getIntentExtra() {
@@ -43,43 +73,5 @@ public class ListFoodActivity extends BaseActivity {
 
         binding.listaTituloTxt.setText(categoryName);
         binding.backListBtn.setOnClickListener(view -> finish());
-    }
-
-    private class LoadFoodListTask extends AsyncTask<Integer, Void, ArrayList<Foods>> {
-        @Override
-        protected ArrayList<Foods> doInBackground(Integer... params) {
-            int categoryId = params[0];
-            ArrayList<Foods> list = new ArrayList<>();
-
-            try {
-                if (connection != null && !connection.isClosed()) {
-                    PreparedStatement statement = connection.prepareStatement("SELECT * FROM Foods WHERE CategoryId = ?");
-                    statement.setInt(1, categoryId);
-                    ResultSet resultSet = statement.executeQuery();
-                    while (resultSet.next()) {
-                        Foods food = new Foods();
-                        food.setNombre(resultSet.getString("name"));
-                        list.add(food);
-                    }
-                    resultSet.close();
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            return list;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Foods> list) {
-            if (list.size() > 0) {
-                binding.foodListView.setLayoutManager(new LinearLayoutManager(
-                        ListFoodActivity.this, LinearLayoutManager.VERTICAL, false
-                ));
-                binding.foodListView.setAdapter(new FoodListAdapter(list));
-            }
-            binding.progressBar.setVisibility(View.GONE);
-        }
     }
 }

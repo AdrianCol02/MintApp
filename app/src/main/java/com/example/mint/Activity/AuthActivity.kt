@@ -17,6 +17,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 class AuthActivity : AppCompatActivity() {
 
@@ -28,6 +29,7 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var emailTxt: TextInputEditText
     private lateinit var pwdTxt: TextInputEditText
     private var isLogin: Boolean = true
+    var database: FirebaseDatabase? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +38,7 @@ class AuthActivity : AppCompatActivity() {
         activity = this
         enableEdgeToEdge()
         FirebaseApp.initializeApp(this)
+        database = FirebaseDatabase.getInstance()
         setContentView(R.layout.activity_auth)
         authButton = findViewById(R.id.logInButton)
         authText = findViewById(R.id.registerText)

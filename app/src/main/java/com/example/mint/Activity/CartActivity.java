@@ -1,5 +1,6 @@
 package com.example.mint.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -7,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mint.Adapter.CartAdapter;
 import com.example.mint.Helper.ManagmentCart;
-import com.example.mint.R;
 import com.example.mint.databinding.ActivityCartBinding;
 
 public class CartActivity extends BaseActivity {
@@ -17,9 +17,9 @@ public class CartActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityCartBinding.inflate(getLayoutInflater());
-        setContentView(R.layout.activity_cart);
+        setContentView(binding.getRoot());
 
-        managmentCart = new ManagmentCart();
+        managmentCart = new ManagmentCart(this);
 
         setVariable();
         calculateCart();
@@ -55,11 +55,8 @@ public class CartActivity extends BaseActivity {
     }
 
     private void setVariable() {
-        binding.backCartBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        binding.backCartBtn.setOnClickListener(view -> startActivity(
+                new Intent(CartActivity.this, DashboardActivity.class)
+        ));
     }
 }

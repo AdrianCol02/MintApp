@@ -31,6 +31,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+
 import com.example.mint.Domain.Foods;
 import com.google.gson.Gson;
 
@@ -483,9 +484,9 @@ public class TinyDB {
      * @param obj is the Object you want to put
      */
     public void putObject(String key, Object obj){
-    	checkForNullKey(key);
-    	Gson gson = new Gson();
-    	putString(key, gson.toJson(obj));
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        putString(key, gson.toJson(obj));
     }
 
     public void putListObject(String key, ArrayList<Foods> playerList){

@@ -1,36 +1,34 @@
 package com.example.mint.Domain;
 
-import java.io.Serializable;
-
-public class Category implements Serializable {
-    private int id;
-    private byte[] imageData;
-    private String name;
+public class Category {
+    private int Id;
+    private String ImagePath;
+    private String Name;
 
     public Category() {
     }
 
     public int getId() {
-        return id;
+        return Id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        Id = id;
     }
 
-    public byte[] getImageData() {
-        return imageData;
+    public String getImagePath() {
+        return ImagePath;
     }
 
-    public void setImageData(byte[] imageData) {
-        this.imageData = imageData;
+    public void setImagePath(String imagePath) {
+        ImagePath = imagePath;
     }
 
     public String getName() {
-        return name;
+        return Name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        Name = name;
     }
 }

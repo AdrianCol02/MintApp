@@ -3,16 +3,17 @@ package com.example.mint.Domain;
 import java.io.Serializable;
 
 public class Foods implements Serializable {
+
     private int CategoryId;
-    private String Nombre; // Nueva columna
     private String Description;
     private boolean BestFood;
     private int Id;
     private int LocationId;
     private double Price;
-    private byte[] ImageData;
+    private String ImagePath;
     private int PriceId;
     private double Star;
+    private String Title;
     private int numberInCart;
 
     public Foods() {
@@ -24,14 +25,6 @@ public class Foods implements Serializable {
 
     public void setCategoryId(int categoryId) {
         CategoryId = categoryId;
-    }
-
-    public String getNombre() { // Getter para el nombre
-        return Nombre;
-    }
-
-    public void setNombre(String nombre) { // Setter para el nombre
-        Nombre = nombre;
     }
 
     public String getDescription() {
@@ -74,12 +67,12 @@ public class Foods implements Serializable {
         Price = price;
     }
 
-    public byte[] getImageData() {
-        return ImageData;
+    public String getImagePath() {
+        return ImagePath;
     }
 
-    public void setImageData(byte[] imageData) {
-        ImageData = imageData;
+    public void setImagePath(String imagePath) {
+        ImagePath = imagePath;
     }
 
     public int getPriceId() {
@@ -96,6 +89,15 @@ public class Foods implements Serializable {
 
     public void setStar(double star) {
         Star = star;
+    }
+
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public void setTitle(String title) {
+        Title = title;
     }
 
     public int getNumberInCart() {

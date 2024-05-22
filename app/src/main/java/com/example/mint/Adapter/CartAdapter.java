@@ -41,27 +41,27 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewholder> {
 
     @Override
     public void onBindViewHolder(@NonNull CartAdapter.viewholder holder, int position) {
-        holder.title.setText(list.get(position).getNombre());
+        holder.title.setText(list.get(position).getTitle());
         holder.feeEachItem.setText(list.get(position).getNumberInCart() *
                 list.get(position).getPrice() + "€");
         holder.num.setText(list.get(position).getNumberInCart() + "");
 
         Glide.with(holder.itemView.getContext())
-                .load(list.get(position).getImageData())
+                .load(list.get(position).getImagePath())
                 .transform(new CenterCrop(), new RoundedCorners(30))
                 .into(holder.pic);
 
         holder.plusItem.setOnClickListener(view -> managmentCart.plusNumberItem(
                 list, position, () -> {
-            notifyDataSetChanged();
-            changeNumberItemsListener.change();
-        }));
+                    notifyDataSetChanged();
+                    changeNumberItemsListener.change();
+                }));
 
         holder.minusItem.setOnClickListener(view -> managmentCart.minusNumberItem(
                 list, position, () -> {
-            notifyDataSetChanged();
-            changeNumberItemsListener.change();
-        }));
+                    notifyDataSetChanged();
+                    changeNumberItemsListener.change();
+                }));
 
         holder.trashBtn.setOnClickListener(view -> managmentCart.removeItem(list, position, () -> {
             notifyDataSetChanged();
@@ -80,6 +80,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewholder> {
         ImageView pic;
         TextView num;
         ConstraintLayout trashBtn;
+
         public viewholder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.titleCartViewhTxt);
